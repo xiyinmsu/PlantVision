@@ -1,7 +1,7 @@
 # PlantVision
 Joint Multi-Leaf Segmentation, Alignment, and Tracking from Fluorescence Plant Videos
 
-Main entrance: MultiLeafTracking.m
+Main entrance file: MultiLeafTracking.m
 
 More details about the project can be found at: http://cvlab.cse.msu.edu/project-plant-vision.html
 
