@@ -7,8 +7,6 @@ for i = 1 : nLeaf
     if leafID(i) ~= 0
         theta0 = newS(i, 1);
         r0 = newS(i, 2);
-%         rx0 = newS(i, 2);
-%         ry0 = newS(i, 3);
         tx0 = newS(i, 3);
         ty0 = newS(i, 4);
 
@@ -28,8 +26,7 @@ for i = 1 : nLeaf
         D(isnan(D)) = 20;
 
         J1(i) = mean(D);
-%         J1(i) = mean(D)/(rx0+eps);  % new J value
     end
 end
 
-% J1 = mean(J1);
+

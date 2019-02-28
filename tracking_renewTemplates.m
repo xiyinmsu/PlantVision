@@ -17,7 +17,6 @@ for i = 1 : newL
         scores(le) = cand(8) - overlap(le);
     end
     
-%     [maxOverlap, index] = max(overlap);
     [~, index] = min(scores);
 
     if overlap(index)>0.5 && leafID(index)~=0

@@ -59,24 +59,4 @@ for i = 1 : nLeaf
     end
 end
 
-% combinedMask = zeros(size(testIm));
-% for i = 1 : nLeaf
-%     if last_leafID(i)~=0
-%         combinedMask = combinedMask + TempInfo.AllMasks{i};
-%     end
-% end
-% 
-% combinedMask0 = combinedMask;
-% combinedMask0(combinedMask0>1) = 1;
-% for i = 1 : nLeaf
-%     if last_leafID(i)~=0
-%         mask0 = TempInfo.AllMasks{i};
-%         residue = combinedMask - mask0;
-%         overlap1 = 1 - sum(sum(combinedMask0.*mask0))/sum(mask0(:));   % overlap with background
-%         overlap2 = sum(sum(combinedMask0.*mask0.*residue))/sum(mask0(:)); % overlap with other leaves
-%         if overlap1 + overlap2 > 0.5 || sum(mask0(:)) < smallLeaf^2 
-%             leafID(i) = 0;
-%             S0(i, :) = 0;
-%         end
-%     end
-% end
+

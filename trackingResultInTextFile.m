@@ -69,7 +69,6 @@ for im = 1 : nImage
                     fprintf(fid, '%d\t%d\t', temp(1,i), temp(2,i));
                 end
                 fprintf(fid, '\n');
-%                 fwrite(fid, [nNum, pt, i, Area(i), 1, temp], 'uint16');  
             end 
         end
     end

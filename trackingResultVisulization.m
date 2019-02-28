@@ -11,7 +11,6 @@ else
 end     
     
 nPlant = size(PlantLocations, 1);
-% nImage = numel(Filenames);
 nImage = numel(Dataset.Image);
 
 for pt = 1 : nPlant
@@ -22,7 +21,6 @@ for pt = 1 : nPlant
     end
 
     for im = nImage:-1:1
-%         inputIm = imread(Filenames{im});
         inputIm = Dataset.Image{im};
         plant = inputIm(rg(2): rg(2)+rg(4)-1, rg(1):rg(1)+rg(3)-1);
         
@@ -37,9 +35,6 @@ for pt = 1 : nPlant
         end
         
         if saveResult        
-%             file = Filenames{im};
-%             index = find(file=='\');
-%             file0 = file(index(end)+1:end);
             file0 = Dataset.Filenames{im}(1:end-4);
             saveas(1, [savepath, num2str(pt), '\',  file0, '.jpg'])
             close

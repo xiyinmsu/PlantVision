@@ -1,4 +1,3 @@
-
 function Filenames = data_preprocessTestImages(imagePath)
 
 files = dir([imagePath, '*_Fmp.tif']);

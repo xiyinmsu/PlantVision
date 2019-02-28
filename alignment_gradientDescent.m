@@ -75,7 +75,6 @@ while overlap <= 0.9
         optB(index(minIn)) = 1;
         number = number + 1;
         order(number) = index(minIn);
-%         disp(['new:', num2str(index(minIn))])
     else
         break
     end
@@ -84,8 +83,6 @@ while overlap <= 0.9
     overlap = M0*Mg/sum(Mg);
 end
 
-
-% check if deleting one leaf will make the objective function smaller
 
 index0 = find(optB==1);
 for i = 1 : length(index0)
@@ -98,7 +95,6 @@ for i = 1 : length(index0)
         optB(index0(i)) = 0;
         number = number - 1;
         order(order==index0(i)) = [];
-%         disp(['delete:', num2str(index0(i))])
     end
 end
 

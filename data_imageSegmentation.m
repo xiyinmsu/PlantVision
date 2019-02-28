@@ -1,14 +1,5 @@
 function [plantIm, testIm, testMask, margin] = data_imageSegmentation(inputIm, threshold, para)          
 
-
-
-% bw1 = bwmorph(inputIm, 'bridge');
-% bw = bwmorph(bw1, 'clean');
-% bw = bwmorph(bw2, 'majority');
-% 
-% testMask = bw;
-% testIm = edge(bw);
-
 inputIm(isnan(inputIm)) = 0;
 f = fspecial('gaussian');
 plantIm = imfilter(double(inputIm), f);  
