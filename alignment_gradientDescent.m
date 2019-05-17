@@ -2,9 +2,9 @@ function [LP, EP, TP, optB, newOrder] = alignment_gradientDescent(candidate, edg
 
 if nargin == 9
     alpha = 0.001;
-    lambda1 = 50;
-    lambda2 = 0.1;
-    lambda3 = 1;
+    lamda1 = 50;
+    lamda2 = 0.1;
+    lamda3 = 1;
     C = 3;
 else
     alpha = Parameters.alpha;
