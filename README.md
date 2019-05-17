@@ -9,7 +9,7 @@ More details about the project can be found at: http://cvlab.cse.msu.edu/project
 Main entrance file: `MultiLeafTracking.m`.
 
 You need to prepare your data into the required format. Check `dara_readInputTextFile.m` to see how the txt file is parsed. 
-Specifically, the `inputPath` is a txt file that stores the image paths and plant location informations. It looks like this:
+Specifically, the `inputData` is a txt file that stores the image paths and plant location informations. It looks like this:
 ```bash
 2
 1 1 100 200 80 80 
