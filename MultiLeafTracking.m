@@ -1,10 +1,9 @@
-function MultiLeafTracking(inputData, outputPath, smallSize, largeSize)
+function MultiLeafTracking(inputData, smallSize, largeSize)
 % INPUTDATA is the string path of .txt file saved the plant information
-% OUTPUTPATH is the path to save output txt files
 % SMALLSIZE and LARGESIZE is the scale of template size
 % default value is 1 and 12.
 
-if nargin == 2
+if nargin == 1
     smallSize = 1;
     largeSize = 12;
 end
@@ -27,6 +26,7 @@ smallLeaf = 5 + 3*smallSize; % smallest leaf to keep
 
 [nPlant, plantIDs, PlantLocations, Filenames] = data_readInputTextFile(inputData);
 nImage = numel(Filenames);
+tips = cell(nPlant, nImage);
 edges = cell(nPlant, nImage);
 areas = cell(nPlant, nImage);
 for pt = 1 : nPlant
@@ -36,9 +36,8 @@ for pt = 1 : nPlant
         inputIm = imread(Filenames{im});
         plant = inputIm(rg(1): rg(1)+rg(3)-1, rg(2):rg(2)+rg(4)-1);
         f = fspecial('gaussian');
-        plantIm = imfilter(plant, f);       
-        [testIm, testMask] = data_imageSegmentation(plantIm, threshold);  
-  
+        plantIm = imfilter(plant, f);
+        [plantIm, testIm, testMask, ~] = data_imageSegmentation(plantIm, threshold);  
         if im == 1 
             disp(['Plant:' num2str(plantIDs(pt,:)), ': leaf alignment on the last frame'])
             [Template, TemplateMask, TemplateTip, Theta, leafID, deltaTXs, deltaTYs, S0] = tracking_leafAlignmentForLastFrame(testIm, testMask, template, templateMask, templateTip, foregroundRatio);
@@ -64,7 +63,9 @@ for pt = 1 : nPlant
             [leafID, newS, deltaTXs, deltaTYs, Theta, Template, TemplateMask, TemplateTip, AllMasks] = tracking_renewTemplates(newCandidate, newMask, testIm, testMask, template, templateMask, templateTip, leafID, newS, deltaTXs, deltaTYs, Theta, Template, TemplateMask, TemplateTip, AllMasks, smallLeaf);  
         end
       
-        [EP, ~, ~, leafID, Area, S0] = tracking_generateLeafInformation(testIm, Template, TemplateTip, AllMasks, leafID, newS, smallLeaf);
+        [EP, LP, TP, leafID, Area, S0] = tracking_generateLeafInformation(testIm, Template, TemplateTip, AllMasks, leafID, newS, smallLeaf);
+        displayResult(LP, EP, TP, testIm, leafID)
+        tips{pt, im} = TP;
         edges{pt, im} = EP;
         areas{pt, im} = Area;     
         
@@ -73,11 +74,12 @@ for pt = 1 : nPlant
     end
    disp(['tracking done for Plant: ', num2str(plantIDs(pt,:))])
 end
+save('results.mat', 'tips', 'edges', 'areas')
 
 pause(0.5)
 disp('tracking done for all Plants')
 pause(0.5)
-disp('calculate how many leaves are there in one image')
+disp('count leaves in each image')
 
 % calculate how many leaves are there in one image
 allLeafNum = zeros(nImage, 1);
@@ -96,41 +98,5 @@ for im = 1 : nImage
     file = Filenames{im};
     disp([file, ' : ', num2str(num), ' leaves'])
 end
-
-disp('start to write .txt files')
-
-% write output files
-mkdir(outputPath);
-for im = 1 : nImage
-    [~, basename, ~] = fileparts(Filenames{im});
-    fname = [outputPath, basename, '.txt'];
-    fid = fopen(fname, 'wb');
-    leafNum = allLeafNum(im);
-    fwrite(fid, leafNum, 'uint16');
-    
-    for pt = 1 : nPlant
-        ptID = plantIDs(pt, :);
-        EP = edges{pt, im};
-        Area = areas{pt, im};
-        nLeaf = numel(EP);
-        
-        for i = 1 : nLeaf
-            if ~isempty(EP{i})
-                leafInfo = EP{i};
-                nPoints = size(leafInfo, 1);
-                nNum = 5 + nPoints*2;
-                temp = leafInfo';
-                temp = temp(:)';
-                fwrite(fid, [nNum, ptID, i, Area(i), 1, temp], 'uint16');  
-            end 
-        end
-    end
-    
-    fclose(fid);
-    disp(['write done: ', fname])
-end
-        
-
-
 
 
