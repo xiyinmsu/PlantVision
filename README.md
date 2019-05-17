@@ -14,7 +14,6 @@ Specifically, the `inputPath` is a txt file that stores the image paths and plan
 2
 1 1 100 200 80 80 
 1 2 100 400 90 90
-3
 image_frame_1.jpg
 image_frame_2.jpg
 image_frame_3.jpg
@@ -22,12 +21,23 @@ image_frame_3.jpg
 The first row is the total number of N plants in the image/video frames. 
 Then the next N rows are the plant IDs and locations. 
 Each row is in the format: `plant_row, plant_column, location_row, location_column, height, width`.
-The next row is the total number of M frames in a video.
 We assume the camera is fixed so the locations apply to all frames. 
-The next M rows are the paths to the image frames in order. 
+The remaining rows are the paths to the image frames in order. 
 After you have prepared your data into this format, you can use `MultiLeafTracking.m` to process your data. 
 Please pay attention to the leaf sizes in your data and change the `smallSize` and `largeSize` accordingly. 
 You may also need to generate your own leaf templates if needed. 
+
+
+## Demo
+There is an example file in `Demo/input.txt`.
+You can run the demo.
+```bash
+MultiLeafTracking('Demo/input.txt')
+```
+Please note that if you ever get invalid results. 
+It is very likely due to image pre-processing. 
+Make sure the plant is centered with tight margin. 
+You can check the edge map (`testIm`) and the mask (`testMask`) to see if pre-processing is successful. 
 
 ## Citation
 If you found this code useful, please consider to cite:
@@ -43,5 +53,4 @@ If you found this code useful, please consider to cite:
   publisher={IEEE}
 }
 ```
-
 
