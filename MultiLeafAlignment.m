@@ -17,23 +17,20 @@ function [LP, EP, TP, testIm1, margin] = MultiLeafAlignment(testIm, testMask, te
     
 
 if nargin == 5
-    Parameters.foregroundRatio = 0.85;
-    Parameters.alpha = 0.001; % step size for gradient descent 
-    Parameters.lamda1 = 50;
-    Parameters.lamda2 = 0.1;
-    Parameters.lamda3 = 1;
-    Parameters.C = 3;
-    Parameters.margin = 3; % margin to crop test image
+    foregroundRatio = 0.85;
+    marg = 3; % margin to crop test image
+else
+    foregroundRatio = Parameters.foregroundRatio;
+    marg = Parameters.marg;
 end
     
-
-[testIm1, margin] = cropBinaryImage(testIm, Parameters.margin);
-testMask1 = testMask(margin(1)+1:end-margin(3), margin(2)+1:end-margin(4));
+[testIm1, marg_new] = cropBinaryImage(testIm, marg);
+testMask1 = testMask(margin_new(1)+1:end-marg_new(3), marg_new(2)+1:end-marg_new(4));
 
 [chamferMatchingDistanceValue, matchingPixels, matchingTips] = alignment_chamferMatching(testIm1, testMask1, template, templateMask, templateTip);
 
-[M, A, S, D, candidate, edges, tips] = alignment_initialization(chamferMatchingDistanceValue, matchingPixels, matchingTips, testMask1, template, templateMask, Parameters.foregroundRatio);               
+[M, A, S, D, candidate, edges, tips] = alignment_initialization(chamferMatchingDistanceValue, matchingPixels, matchingTips, testMask1, template, templateMask, foregroundRatio);
 
-[LP, EP, TP]  = alignment_gradientDescent(candidate, edges, tips, M, A, S, D, Parameters, testMask1, templateMask);        
+[LP, EP, TP]  = alignment_gradientDescent(candidate, edges, tips, M, A, S, D, testMask1, templateMask); 
 
 

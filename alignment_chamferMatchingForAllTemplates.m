@@ -37,7 +37,7 @@ for sh = 1 : nShape
                 EP{p} = [xx, yy];
                 [xx1, yy1] = ind2sub(size(testIm), edgePixelPositionMap(sub2ind(size(testIm), xx, yy)));
                 MEP{p} = [xx1, yy1];
-                
+               
                 tip = templateTip{sh, s, d} + repmat([start_x-1, start_y-1], 2, 1);
                 tip0 = tip';
                 TP(p, :) = tip0(:)';
@@ -47,7 +47,6 @@ for sh = 1 : nShape
                 MTP(p, :) = tip2';
                 
                 plot(yy, xx, 'r*')
-                disp([num2str(sh), '-', num2str(s), '-', num2str(d)])
             end
         end
     end    

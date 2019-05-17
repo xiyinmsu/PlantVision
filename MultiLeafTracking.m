@@ -1,6 +1,5 @@
-function MultiLeafTracking(inputPath, outputPath, smallSize, largeSize)
-% function format: MultiLeafTracking(inputPath, outputPath, smallSize, largeSize)
-% INPUTPATH is the string path of .txt file saved the plant information
+function MultiLeafTracking(inputData, outputPath, smallSize, largeSize)
+% INPUTDATA is the string path of .txt file saved the plant information
 % OUTPUTPATH is the path to save output txt files
 % SMALLSIZE and LARGESIZE is the scale of template size
 % default value is 1 and 12.
@@ -10,19 +9,14 @@ if nargin == 2
     largeSize = 12;
 end
 
-load('template.mat')
-load('templateTip.mat')
+load('Data/templates.mat')
 template = template(:, smallSize:largeSize, :);
 templateTip = templateTip(:, smallSize:largeSize, :);
+templateMask = templateMask(:, smallSize:largeSize, :);
 
 % parameters for alignment
 foregroundRatio = 0.85;
 threshold = 0.002; % for image segmentation
-alpha1 = 0.001; % step size for gradient descent 
-lamda1 = 25;
-lamda2 = 0.2;
-lamda3 = 2;
-C = 3;
 
 % parameters for tracking
 maxiter = 80;
@@ -31,12 +25,10 @@ belta1 = 1;
 belta2 = 10;
 smallLeaf = 5 + 3*smallSize; % smallest leaf to keep
 
-
-[nPlant, plantIDs, PlantLocations, Filenames] = data_readInputTextFile(inputPath);
+[nPlant, plantIDs, PlantLocations, Filenames] = data_readInputTextFile(inputData);
 nImage = numel(Filenames);
 edges = cell(nPlant, nImage);
 areas = cell(nPlant, nImage);
-
 for pt = 1 : nPlant
     rg = PlantLocations(pt, :);
 
@@ -49,7 +41,7 @@ for pt = 1 : nPlant
   
         if im == 1 
             disp(['Plant:' num2str(plantIDs(pt,:)), ': leaf alignment on the last frame'])
-            [Template, TemplateMask, TemplateTip, Theta, leafID, deltaTXs, deltaTYs, S0] = tracking_leafAlignmentForLastFrame(testIm, testMask, template, templateMask, templateTip, foregroundRatio, alpha1, lamda1, lamda2, lamda3, C);
+            [Template, TemplateMask, TemplateTip, Theta, leafID, deltaTXs, deltaTYs, S0] = tracking_leafAlignmentForLastFrame(testIm, testMask, template, templateMask, templateTip, foregroundRatio);
             disp(['Plant:' num2str(plantIDs(pt,:)), ': generate ', num2str(numel(Template)), ' leaves for tracking'])
         end
        
@@ -77,8 +69,7 @@ for pt = 1 : nPlant
         areas{pt, im} = Area;     
         
         file = Filenames{im};
-        index = find(file=='\');
-        disp(['tracking _ ', 'Plant: ' num2str(plantIDs(pt,:)), ' : ', file(index(end)+1:end)])
+        disp(['tracking plant: ' num2str(plantIDs(pt,:)), ' : ', file])
     end
    disp(['tracking done for Plant: ', num2str(plantIDs(pt,:))])
 end
@@ -103,18 +94,17 @@ for im = 1 : nImage
     end
     allLeafNum(im) = num;
     file = Filenames{im};
-    index = find(file=='\');
-    disp([file(index(end)+1:end), ' : ', num2str(num), ' leaves'])
+    disp([file, ' : ', num2str(num), ' leaves'])
 end
 
 disp('start to write .txt files')
 
 % write output files
+mkdir(outputPath);
 for im = 1 : nImage
-    index = find(Filenames{im}=='\');
-    file = Filenames{im}(index(end)+1:end-4);
-    mkdir(outputPath);
-    fid = fopen([outputPath, file, '.bin'], 'wb');
+    [~, basename, ~] = fileparts(Filenames{im});
+    fname = [outputPath, basename, '.txt'];
+    fid = fopen(fname, 'wb');
     leafNum = allLeafNum(im);
     fwrite(fid, leafNum, 'uint16');
     
@@ -137,7 +127,7 @@ for im = 1 : nImage
     end
     
     fclose(fid);
-    disp(['write done: ', Filenames{im}(index(end)+1:end-4), '.txt'])
+    disp(['write done: ', fname])
 end
         
 

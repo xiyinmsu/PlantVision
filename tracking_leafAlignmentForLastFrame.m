@@ -1,12 +1,9 @@
-function [Template, TemplateMask, TemplateTip, Theta, leafID, deltaTXs, deltaTYs, S0] = tracking_leafAlignmentForLastFrame(testIm, testMask, template, templateMask, templateTip, foregroundRatio, alpha, lamda1, lamda2, lamda3, C)
+function [Template, TemplateMask, TemplateTip, Theta, leafID, deltaTXs, deltaTYs, S0] = tracking_leafAlignmentForLastFrame(testIm, testMask, template, templateMask, templateTip, foregroundRatio)
 
 [chamferMatchingDistanceValue, matchingPixels, matchingTips] = alignment_chamferMatchingForAllTemplates(testIm, template, templateTip);                
 [M, A, S, D, candidate, edges, tips] = alignment_initialization(chamferMatchingDistanceValue, matchingPixels, matchingTips, testMask, template, templateMask, foregroundRatio);               
 
-maxiter = size(candidate, 1);
-B0 = ones(maxiter, 1);
-
-[LP, ~, ~, ~, ~]  = alignment_gradientDescent(candidate, edges, tips, M, A, S, D, B0, maxiter, alpha, lamda1, lamda2, lamda3, C, testMask, templateMask);            
+[LP, ~, ~, ~, ~]  = alignment_gradientDescent(candidate, edges, tips, M, A, S, D, testMask, templateMask); 
 
 [Template, TemplateMask, TemplateTip, Theta] = tracking_generateTemplateInformation(testIm, template, templateMask, templateTip, LP);
 

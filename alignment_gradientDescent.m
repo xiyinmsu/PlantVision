@@ -1,13 +1,21 @@
-function [LP, EP, TP, optB, newOrder] = alignment_gradientDescent(candidate, edges, tips, M, A, S, D, Parameters, testMask, templateMask)      
+function [LP, EP, TP, optB, newOrder] = alignment_gradientDescent(candidate, edges, tips, M, A, S, D, testMask, templateMask, Parameters)      
+
+if nargin == 9
+    alpha = 0.001;
+    lambda1 = 50;
+    lambda2 = 0.1;
+    lambda3 = 1;
+    C = 3;
+else
+    alpha = Parameters.alpha;
+    lamda1 = Parameters.lamda1;
+    lamda2 = Parameters.lamda2;
+    lamda3 = Parameters.lamda3;
+    C = Parameters.C;
+end
 
 maxiter = size(candidate, 1);
 B0 = ones(maxiter, 1);
-
-alpha = Parameters.alpha;
-lamda1 = Parameters.lamda1;
-lamda2 = Parameters.lamda2;
-lamda3 = Parameters.lamda3;
-C = Parameters.C;
 
 niter = 1;
 B = B0;
