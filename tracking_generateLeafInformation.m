@@ -4,7 +4,7 @@ function  [EP, LP, TP, leafID, Area, S0] = tracking_generateLeafInformation(test
 nLeaf = numel(last_leafID);
 LP = zeros(nLeaf, 8);
 EP = cell(nLeaf, 1);
-TP = zeros(nLeaf, 8);
+TP = zeros(nLeaf, 4);
 leafID = last_leafID;
 Area = zeros(nLeaf, 1);
 S0 = newS;
@@ -75,7 +75,7 @@ for i = 1 : nLeaf
         score = sum(sum(distanceMap(sub2ind(size(testIm), x1, y1))))/numel(x1);
         LP(i, 4:8) = [start_x, start_y, height, width, score]; 
 
-        newTempTip = [cos(theta), -sin(theta); sin(theta), cos(theta)]*[tempTip(1:2:end)- mean(temp(:,1)); tempTip(2:2:end)- mean(temp(:,2))]*r + repmat([tx + mean(temp(:,1));ty + mean(temp(:,2))], 1, 4);
+        newTempTip = [cos(theta), -sin(theta); sin(theta), cos(theta)]*[tempTip(1:2:end)- mean(temp(:,1)); tempTip(2:2:end)- mean(temp(:,2))]*r + repmat([tx + mean(temp(:,1));ty + mean(temp(:,2))], 1, 2);
         tip = round(newTempTip);
         [tip_x, tip_y] = data_adjustWithinImage(testIm, tip(1,:), tip(2,:));
         [tip_x, tip_y] = ind2sub(size(testIm), edgePixelPositionMap(sub2ind(size(testIm), tip_x, tip_y)));
