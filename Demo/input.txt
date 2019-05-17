@@ -1,0 +1,4 @@
+1
+3 5 407 740 55 50
+Demo/images/Imgs_100_cam_0.tif
+Demo/images/Imgs_200_cam_0.tif
